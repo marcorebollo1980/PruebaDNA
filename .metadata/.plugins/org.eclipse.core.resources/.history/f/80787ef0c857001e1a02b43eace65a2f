@@ -1,0 +1,71 @@
+package com.dna.controller;
+
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api")
+public class MutacionADNController {
+
+    @PostMapping("/mutation")
+    public ResponseEntity<String> detectarMutacion(@RequestBody Map<String, String[]> requestBody) {
+        String[] secuenciaADN = requestBody.get("dna");
+        boolean tieneMutacion = hasMutation(secuenciaADN);
+
+        if (tieneMutacion) {
+            return ResponseEntity.ok("Se encontró una mutación.");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No se encontró una mutación.");
+        }
+    }
+
+    private boolean hasMutation(String[] dna) {
+    	 int n = dna.length;
+         
+         // Verificar filas y columnas
+         for (int i = 0; i < n; i++) {
+             for (int j = 0; j < n; j++) {
+                 char base = dna[i].charAt(j);
+                 
+                 // Verificar horizontalmente
+                 if (j + 3 < n &&
+                     base == dna[i].charAt(j + 1) &&
+                     base == dna[i].charAt(j + 2) &&
+                     base == dna[i].charAt(j + 3)) {
+                     return true;
+                 }
+                 
+                 // Verificar verticalmente
+                 if (i + 3 < n &&
+                     base == dna[i + 1].charAt(j) &&
+                     base == dna[i + 2].charAt(j) &&
+                     base == dna[i + 3].charAt(j)) {
+                     return true;
+                 }
+                 
+                 // Verificar diagonalmente hacia abajo y derecha
+                 if (i + 3 < n && j + 3 < n &&
+                     base == dna[i + 1].charAt(j + 1) &&
+                     base == dna[i + 2].charAt(j + 2) &&
+                     base == dna[i + 3].charAt(j + 3)) {
+                     return true;
+                 }
+                 
+                 // Verificar diagonalmente hacia abajo e izquierda
+                 if (i + 3 < n && j - 3 >= 0 &&
+                     base == dna[i + 1].charAt(j - 1) &&
+                     base == dna[i + 2].charAt(j - 2) &&
+                     base == dna[i + 3].charAt(j - 3)) {
+                     return true;
+                 }
+             }
+         }
+		return false;
+    }
+}

@@ -1,0 +1,23 @@
+package com.dna.controller;
+
+@RestController
+@RequestMapping("/api")
+public class MutacionADNController {
+
+    @PostMapping("/mutation")
+    public ResponseEntity<String> detectarMutacion(@RequestBody Map<String, String[]> requestBody) {
+        String[] secuenciaADN = requestBody.get("dna");
+        boolean tieneMutacion = detectarMutacion(secuenciaADN);
+
+        if (tieneMutacion) {
+            return ResponseEntity.ok("Se encontró una mutación.");
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No se encontró una mutación.");
+        }
+    }
+
+    private boolean detectarMutacion(String[] secuenciaADN) {
+        // La lógica de detección de mutación que has proporcionado anteriormente
+        // Deberás copiarla aquí
+    }
+}

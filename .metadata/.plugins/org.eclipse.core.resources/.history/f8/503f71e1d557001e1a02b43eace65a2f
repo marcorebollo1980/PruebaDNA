@@ -1,0 +1,5 @@
+package com.dna.repository;
+
+public interface DnaVerificationRepository {
+
+}
